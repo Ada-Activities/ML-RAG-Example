@@ -7,25 +7,25 @@ KENDRA_SERVICE = 'kendra'
 BEDROCK_SERVICE = 'bedrock-runtime'
 CT_JSON = 'application/json'
 
+KEY_RESULT_ITEMS = 'ResultItems'
+KEY_DOC_EXCERPT = 'DocumentExcerpt'
+KEY_TEXT_UPPER = 'Text'
+KEY_OUTPUT = 'output'
+KEY_MESSAGE = 'message'
+KEY_CONTENT = 'content'
+KEY_TEXT_LOWER = 'text'
+
 kendra = boto3.client(KENDRA_SERVICE)
 bedrock = boto3.client(BEDROCK_SERVICE)
 
 def get_response_subset(response, max_length_per_result=300, max_results=5):
-    if 'ResultItems' in response and response['ResultItems']:
-        items = []
-        processed = 0
-        for item in response['ResultItems']:
-            if processed >= max_results:
-                break
+    items = []
+    for item in response.get(KEY_RESULT_ITEMS, [])[:max_results]:
+        text = item.get(KEY_DOC_EXCERPT, {}).get(KEY_TEXT_UPPER)
+        if text:
+            items.append(text[:max_length_per_result])
 
-            if 'DocumentExcerpt' in item and 'Text' in item['DocumentExcerpt']:
-                items.append(item['DocumentExcerpt']['Text'][:max_length_per_result])
-                processed += 1
-
-        combined_text = " ".join(items)
-        return combined_text
-    
-    return "No relevant policies found."
+    return " ".join(items) if items else "No relevant policies found."
 
 def retrieve_context(user_question):
     # Query Amazon Kendra for the relevant policy
@@ -57,7 +57,7 @@ def make_nova_payload(prompt, max_tokens=300):
             "maxTokens": max_tokens
         }
     }
-    return json.dumps(payload)
+    return payload
 
 def generate_answer(prompt):
     # Send the prompt to a Foundation Model via Amazon Bedrock
@@ -70,10 +70,13 @@ def generate_answer(prompt):
     )
 
     response_body = json.loads(response['body'].read())
-    # return response_body['completion']
-    content = response_body['output']['message']['content']
     
-    return content[0]['text'] if content and 'text' in content[0] else "No answer generated."
+    content_list = response_body.get(KEY_OUTPUT, {}).get(KEY_MESSAGE, {}).get(KEY_CONTENT, [])
+    
+    if content_list and isinstance(content_list, list):
+        return content_list[0].get(KEY_TEXT_LOWER, "No answer generated.")
+        
+    return "No answer generated."
 
 # --- Test the Co-Pilot ---
 # question = "Can I return a leather journal if I had my initials embossed on it?"
