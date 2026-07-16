@@ -37,7 +37,7 @@ KENDRA_INDEX_ID=your-kendra-index-id
 BEDROCK_MODEL_ID=us.amazon.nova-2-lite-v1:0
 ```
 
-Nova 2 Lite is a good choice for this example, but you can select any Bedrock model that suits your needs. Refer to the Lab Walkthrough document for guidance on selecting a model.
+Nova 2 Lite is a good choice for this example, but you can select any Bedrock model that suits your needs. Refer to the Livecode Steps document for guidance on selecting a model.
 
 ## Running
 
