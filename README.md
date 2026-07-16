@@ -54,4 +54,4 @@ Edit `main.py` to change the sample question or behavior.
 - This example expects to use the credentials and permissions of the AWS CLI profile configured on your machine. If the example fails to run due to permissions, try refreshing your AWS credentials with `aws login`.
 - The code is intentionally minimal for learning and demonstration; adapt error handling, logging, and configuration to your needs.
 - If concepts like `dataclass` or `TypedDict` are new, refer to the Python documentation for more details on these features.
-- Information about setting up Kendra and selecting Bedrock models are provided in the Lab Walkthrough document.
+- Information about setting up Kendra and selecting Bedrock models are provided in the Livecode Steps document.
