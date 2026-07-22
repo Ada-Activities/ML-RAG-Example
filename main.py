@@ -20,7 +20,7 @@ def main() -> None:
     bedrock_client = initialize_bedrock_client()
 
     # Bank of sample questions
-    answer = "Follow the lab directions to explore this code."
+    answer = "Follow the livecode directions to explore this code."
     question = "Can I return a leather journal if I had my initials embossed on it?"
     # question = "What paper types are best for ballpoint pens?"
     # question = "What paper types are best for glass quill pens?"
